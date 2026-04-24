@@ -1,0 +1,35 @@
+# config/caddy_ai2_multi_shared_map.yaml
+# ──────────────────────────────────────────────────────────────────────────────
+# Escenario E — Multi-robot, mapa global compartido entre todos los robots
+#
+# Árbol TF de ROS:
+#   map → robot1/odom → robot1/base_footprint
+#         robot2/odom → robot2/base_footprint
+#
+# TFs publicadas:
+#   world → map          (corrección del mapa compartido; calculada por robot1)
+#   world → robot2/odom  (corrección residual de odometría de robot2 vs map)
+#
+# NOTA sobre el robot maestro del mapa compartido:
+#   Solo un robot debe publicar la corrección del frame 'map'.
+#   Aquí robot1 actúa como maestro para 'map', mientras robot2 corrige
+#   su propio odom (el map ya queda corregido por robot1).
+#   Si ambos publicasen 'map', la TF oscilaría entre dos fuentes.
+#
+# Uso:
+#   ros2 launch gz_ground_truth multi_shared_map.launch.py
+#   ros2 run gz_ground_truth ground_truth_tf_publisher \
+#       --ros-args --params-file config/caddy_ai2_multi_shared_map.yaml
+# ──────────────────────────────────────────────────────────────────────────────
+ground_truth_tf_publisher:
+  ros__parameters:
+    use_sim_time: true
+    multi_robot: true
+
+    robots:
+      - robot1:robot1:map          # robot1 es el maestro del frame compartido 'map'
+      - robot2:robot2:robot2/odom  # robot2 corrige su odom (map ya está corregido)
+
+    ground_truth_frame: world
+    base_suffix: base_footprint
+    publish_rate: 50.0

@@ -1,0 +1,29 @@
+# config/caddy_ai2_multi_per_robot_map.yaml
+# ──────────────────────────────────────────────────────────────────────────────
+# Escenario D — Multi-robot, mapa independiente por robot
+#
+# Árbol TF de ROS:
+#   robot1/map → robot1/odom → robot1/base_footprint
+#   robot2/map → robot2/odom → robot2/base_footprint
+#
+# TFs publicadas:
+#   world → robot1/map   (error del localizador de robot1 respecto al GT)
+#   world → robot2/map   (error del localizador de robot2 respecto al GT)
+#
+# Uso:
+#   ros2 launch gz_ground_truth multi_per_robot_map.launch.py
+#   ros2 run gz_ground_truth ground_truth_tf_publisher \
+#       --ros-args --params-file config/caddy_ai2_multi_per_robot_map.yaml
+# ──────────────────────────────────────────────────────────────────────────────
+ground_truth_tf_publisher:
+  ros__parameters:
+    use_sim_time: true
+    multi_robot: true
+
+    robots:
+      - robot1:robot1:robot1/map
+      - robot2:robot2:robot2/map
+
+    ground_truth_frame: world
+    base_suffix: base_footprint
+    publish_rate: 50.0

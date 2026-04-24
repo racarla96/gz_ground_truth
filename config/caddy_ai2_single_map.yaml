@@ -1,0 +1,28 @@
+# config/caddy_ai2_single_map.yaml
+# ──────────────────────────────────────────────────────────────────────────────
+# Escenario B — Robot único, con localizador activo (AMCL, Nav2, etc.)
+#
+# Árbol TF de ROS:
+#   map → caddy_ai2/odom → caddy_ai2/base_footprint
+#
+# TF publicada:
+#   world → map   (error del localizador respecto al ground truth)
+#
+# Uso:
+#   ros2 launch gz_ground_truth single_map.launch.py
+#   ros2 run gz_ground_truth ground_truth_tf_publisher \
+#       --ros-args --params-file config/caddy_ai2_single_map.yaml
+# ──────────────────────────────────────────────────────────────────────────────
+ground_truth_tf_publisher:
+  ros__parameters:
+    use_sim_time: true
+    multi_robot: false
+
+    gz_model_name: caddy_ai2
+    tf_prefix: caddy_ai2
+
+    ground_truth_frame: world
+    base_suffix: base_footprint
+    localization_frame: map
+
+    publish_rate: 50.0

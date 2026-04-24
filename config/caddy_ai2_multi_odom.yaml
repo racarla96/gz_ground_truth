@@ -1,0 +1,32 @@
+# config/caddy_ai2_multi_odom.yaml
+# ──────────────────────────────────────────────────────────────────────────────
+# Escenario C — Multi-robot, sin localizador (solo odometría por robot)
+#
+# Árbol TF de ROS:
+#   robot1/odom → robot1/base_footprint
+#   robot2/odom → robot2/base_footprint
+#
+# TFs publicadas:
+#   world → robot1/odom   (corrección odometría robot1)
+#   world → robot2/odom   (corrección odometría robot2)
+#
+# Formato de cada entrada en robots:
+#   'gz_model_name:tf_prefix:localization_frame'
+#
+# Uso:
+#   ros2 launch gz_ground_truth multi_odom.launch.py
+#   ros2 run gz_ground_truth ground_truth_tf_publisher \
+#       --ros-args --params-file config/caddy_ai2_multi_odom.yaml
+# ──────────────────────────────────────────────────────────────────────────────
+ground_truth_tf_publisher:
+  ros__parameters:
+    use_sim_time: true
+    multi_robot: true
+
+    robots:
+      - robot1:robot1:robot1/odom
+      - robot2:robot2:robot2/odom
+
+    ground_truth_frame: world
+    base_suffix: base_footprint
+    publish_rate: 50.0
