@@ -29,4 +29,4 @@ ground_truth_tf_publisher:
 
     ground_truth_frame: world
     base_suffix: base_footprint
-    publish_rate: 50.0
+    publish_rate: 100.0
